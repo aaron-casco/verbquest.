@@ -1,0 +1,8 @@
+import {alternatives} from './core.js';
+export function usage(v){const [base,past,part]=v.forms;return `${base}${v.note?' ('+v.note+')':''}: ${v.meaning||'consulta las formas de tu lista'}.\n\nInfinitivo: ${base}. Forma base después de «to» o de verbos como «can».\nPasado simple: ${past}. Describe hechos o estados pasados, por ejemplo con «yesterday».\nParticipio: ${part}. Se usa con «have / has / had» para formar tiempos perfectos. No es un tiempo verbal por sí solo.\n\n${past===part?'El pasado y el participio se escriben igual.':'El pasado y el participio son distintos: no intercambies las columnas.'}${base==='be'?'\n«Was» acompaña I/he/she/it; «were», you/we/they.':''}${base==='read'?'\n«Read» mantiene la escritura, pero cambia la pronunciación en pasado y participio.':''}${base==='lie'?'\nTumbarse: lie–lay–lain. Mentir: lie–lied–lied. «Lay–laid–laid» significa colocar algo.':''}${v.forms.some(f=>f.includes('/'))?'\nSe admiten las variantes indicadas, tanto una sola como varias separadas con barra, coma o espacios.':''}`;}
+export function examples(v){if(!v.context)return null;const base=alternatives(v.forms[0])[0],past=alternatives(v.forms[1])[0],part=alternatives(v.forms[2])[0],tail=v.context,s=v.subject||'I',have=s==='I'?'have':'has';
+ return [
+ {name:'Infinitivo',sentences:[`${s} can ${base} ${tail}.`,`Could ${s==='I'?'I':s.toLowerCase()} ${base} ${tail}?`,`${s} may ${base} ${tail}.`]},
+ {name:'Pasado simple',sentences:[`${s} ${past} ${tail} yesterday.`,`Last week, ${s==='I'?'I':s.toLowerCase()} ${past} ${tail}.`,`On Monday, ${s==='I'?'I':s.toLowerCase()} ${past} ${tail}.`]},
+ {name:'Participio pasado',sentences:[`${s} ${have} ${part} ${tail}.`,`${s} ${have} already ${part} ${tail}.`,`${s} had ${part} ${tail} before the lesson.`]},
+ ];}

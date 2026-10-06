@@ -1,0 +1,21 @@
+# Revisión local · VerbQuest v8
+
+No se ha publicado esta versión. Abre la carpeta extraída en Terminal (`cd` más ruta arrastrada), ejecuta `npm install` y `PORT=4180 npm start`, abre http://localhost:4180. Deja la terminal abierta.
+
+1. **Evoluciones**: entra con un perfil de prueba. En la tienda comprueba que la criatura inicial parece bebé, la segunda adolescente y la final más fuerte. La vista previa de la próxima evolución debe ser una silueta negra. Solo tras comprar se revela con animación. Repite con una coleccionable (dos etapas).
+2. **Color principal**: cambia a azul, amarillo y morado en la etapa final. Revisa hocico de Nyx, pecho de Gema, cara/manos de Nimbo y zonas claras de Astra. El sombreado debe conservarse. No aparece selector secundario ni accesorios. Una vista previa cancelada no cobra.
+3. **Otro inicial**: con 700 VC, elige un inicial distinto. Se descuentan 700; el nuevo está en etapa uno. El anterior sigue en la colección con nombre, color y evolución conservados. Con menos de 700 no se puede comprar.
+4. **Catálogo y aperturas**: sin descubrir, debe mostrarse una silueta negra con interrogación blanca. Compra 1, 5 o 10: coste 150, 750 o 1500 VC, respectivamente. Comprueba que salen tantas criaturas como compras, pueden repetirse, y cada copia tiene nombre/color/evolución independientes. Las especies descubiertas permanecen visibles aunque vendas todas sus copias desde esta versión. Probabilidades por apertura: Luma 35 %, Nimbo 30 %, Gema 20 %, Vesper 12 %, Astra 3 %.
+5. **Ventas y espacio**: pulsa Vender ahora en resultados de un encuentro. Se devuelve el precio indicado una sola vez. Guarda las restantes. En colección selecciona varias y comprueba el total antes de confirmar. Seleccionar vendibles nunca incluye iniciales ni compañero activo. Comunes 80 VC, poco comunes 120, raras 200, legendarias 300. Límite 30; un lote que no cabe no se cobra parcialmente. No existe Eliminar.
+6. **Ruleta**: elige un examen. Debe haber cinco casillas también al estrenarla. Ronda normal: todos los verbos del examen repartidos equilibradamente en cinco grupos. Cada ronda reorganiza los grupos. Al completar una casilla no vuelve a elegirse. Todos los verbos: aparece selector; «absolutamente todos» incluye 105 entradas en 20 grupos, «aleatorios» 25 entradas mezcladas de la lista completa en cinco grupos. Cada giro muestra todas las filas del grupo juntas; una forma está dada y se completan las otras dos.
+7. **Celebraciones**: completa una ronda, compra un juego o color y recoge un premio desde el panel local. Confeti y mensaje muestran el resultado. Una recarga no duplica premios ni cobra otra apertura. Se respeta la preferencia de reducir movimiento del sistema.
+8. **Resto de funciones**: practica los cuatro bloques (25/28/25/27), prueba `was were`, cancela una ronda y revisa errores recientes. Simulacro: tres errores aprueban, cuatro suspenden. Ranking: más aciertos primero, tiempo desempata. Competitivo sigue sin ruleta.
+9. **Móvil**: reduce el navegador o usa móvil en la misma Wi-Fi del ordenador con la IP local del Mac y puerto 4180. No debe haber desplazamiento horizontal. La URL localhost solo funciona en el ordenador que ejecuta la web.
+
+La demo guarda perfiles y progreso en este navegador. Autenticación real, clasificación compartida, permiso de administrador en producción y notificaciones con servidor quedan pendientes de conectar antes de abrirlo a la clase. `PUBLICACION.md` explica la preparación de GitHub y Vercel.
+
+10. **Revelación**: observa cómo el orbe dorado cambia a verde (común), azul (poco común), morado (rara) o luz dorada intensa (legendaria). La espera aumenta por rareza. Con movimiento reducido, la revelación es inmediata.
+11. **Trampas de verbos**: en Portal y Cazafallos aparecen regularizaciones falsas y confusiones entre formas. Para cut, las trampas incluyen cuted/cutted, no cat.
+
+12. **Saltar y recargar**: durante la apertura, pulsa la cruz o Saltar animación: aparecen resultados directamente. Recarga ahí y comprueba que la animación no se repite. Cierra resultados: se guardan las criaturas restantes. Recargar después no cobra ni vuelve a mostrar el lote.
+13. **Bordes**: revisa Vesperion y Astralis, especialmente con amarillo y tonos claros. No deben aparecer fragmentos de otra criatura en los márgenes; comprueba que se mantienen las líneas oscuras.

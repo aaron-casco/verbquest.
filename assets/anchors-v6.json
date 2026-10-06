@@ -1,0 +1,764 @@
+{
+  "coordinateSystem": "Source atlas pixels, bounds [left,top,right,bottom], right/bottom exclusive. Source bounds measured alpha>100. Head bounds and accessory centers visually estimated. Forehead is cap mount, not highest horn/crest. Wrists indicate possible left/right bracelet mounts; wings are inferred wrist region. Three-quarter perspective requires rotated/scaled eyewear.",
+  "alphaNote": "Imagegen interiors mainly alpha252-253. Normalize near-opaque alpha>=245 to255 and trace alpha<=3 to0 before recolor, keeping actual edge coverage.",
+  "starters": {
+    "file": "starters-v6.png",
+    "width": 1254,
+    "height": 1254,
+    "sprites": [
+      {
+        "id": "lumio-baby",
+        "bounds": [
+          87,
+          59,
+          353,
+          342
+        ],
+        "headBounds": [
+          198,
+          117,
+          346,
+          226
+        ],
+        "forehead": [
+          262,
+          115
+        ],
+        "eyes": [
+          281,
+          174
+        ],
+        "neck": [
+          280,
+          231
+        ],
+        "wrists": [
+          [
+            151,
+            290
+          ],
+          [
+            278,
+            291
+          ]
+        ]
+      },
+      {
+        "id": "nyx-baby",
+        "bounds": [
+          465,
+          27,
+          767,
+          345
+        ],
+        "headBounds": [
+          601,
+          111,
+          754,
+          248
+        ],
+        "forehead": [
+          684,
+          131
+        ],
+        "eyes": [
+          692,
+          181
+        ],
+        "neck": [
+          693,
+          245
+        ],
+        "wrists": [
+          [
+            587,
+            308
+          ],
+          [
+            661,
+            314
+          ]
+        ]
+      },
+      {
+        "id": "bruma-baby",
+        "bounds": [
+          872,
+          25,
+          1133,
+          348
+        ],
+        "headBounds": [
+          981,
+          128,
+          1132,
+          309
+        ],
+        "forehead": [
+          1080,
+          137
+        ],
+        "eyes": [
+          1084,
+          194
+        ],
+        "neck": [
+          1082,
+          248
+        ],
+        "wrists": [
+          [
+            1004,
+            270
+          ],
+          [
+            1103,
+            271
+          ]
+        ]
+      },
+      {
+        "id": "lumio-adolescent",
+        "bounds": [
+          53,
+          373,
+          367,
+          751
+        ],
+        "headBounds": [
+          201,
+          429,
+          362,
+          550
+        ],
+        "forehead": [
+          295,
+          442
+        ],
+        "eyes": [
+          311,
+          506
+        ],
+        "neck": [
+          305,
+          562
+        ],
+        "wrists": [
+          [
+            245,
+            698
+          ],
+          [
+            327,
+            698
+          ]
+        ]
+      },
+      {
+        "id": "nyx-adolescent",
+        "bounds": [
+          456,
+          366,
+          803,
+          753
+        ],
+        "headBounds": [
+          654,
+          468,
+          786,
+          564
+        ],
+        "forehead": [
+          727,
+          472
+        ],
+        "eyes": [
+          735,
+          511
+        ],
+        "neck": [
+          733,
+          581
+        ],
+        "wrists": [
+          [
+            671,
+            688
+          ],
+          [
+            768,
+            690
+          ]
+        ]
+      },
+      {
+        "id": "bruma-adolescent",
+        "bounds": [
+          851,
+          373,
+          1207,
+          747
+        ],
+        "headBounds": [
+          1019,
+          463,
+          1160,
+          583
+        ],
+        "forehead": [
+          1091,
+          473
+        ],
+        "eyes": [
+          1107,
+          526
+        ],
+        "neck": [
+          1101,
+          579
+        ],
+        "wrists": [
+          [
+            1021,
+            599
+          ],
+          [
+            1175,
+            587
+          ]
+        ]
+      },
+      {
+        "id": "lumio-final",
+        "bounds": [
+          11,
+          759,
+          426,
+          1229
+        ],
+        "headBounds": [
+          249,
+          831,
+          400,
+          947
+        ],
+        "forehead": [
+          334,
+          859
+        ],
+        "eyes": [
+          343,
+          901
+        ],
+        "neck": [
+          344,
+          978
+        ],
+        "wrists": [
+          [
+            290,
+            1172
+          ],
+          [
+            391,
+            1157
+          ]
+        ]
+      },
+      {
+        "id": "nyx-final",
+        "bounds": [
+          427,
+          754,
+          850,
+          1227
+        ],
+        "headBounds": [
+          672,
+          837,
+          787,
+          944
+        ],
+        "forehead": [
+          726,
+          843
+        ],
+        "eyes": [
+          733,
+          891
+        ],
+        "neck": [
+          736,
+          960
+        ],
+        "wrists": [
+          [
+            682,
+            1160
+          ],
+          [
+            813,
+            1164
+          ]
+        ]
+      },
+      {
+        "id": "bruma-final",
+        "bounds": [
+          808,
+          760,
+          1241,
+          1229
+        ],
+        "headBounds": [
+          1063,
+          858,
+          1172,
+          977
+        ],
+        "forehead": [
+          1114,
+          868
+        ],
+        "eyes": [
+          1120,
+          916
+        ],
+        "neck": [
+          1120,
+          983
+        ],
+        "wrists": [
+          [
+            1037,
+            1009
+          ],
+          [
+            1194,
+            978
+          ]
+        ]
+      }
+    ]
+  },
+  "collectors": {
+    "file": "collectors-v6.png",
+    "width": 1983,
+    "height": 793,
+    "sprites": [
+      {
+        "id": "luma-base",
+        "bounds": [
+          63,
+          35,
+          344,
+          346
+        ],
+        "headBounds": [
+          184,
+          126,
+          344,
+          250
+        ],
+        "forehead": [
+          279,
+          137
+        ],
+        "eyes": [
+          277,
+          192
+        ],
+        "neck": [
+          276,
+          251
+        ],
+        "wrists": [
+          [
+            193,
+            308
+          ],
+          [
+            255,
+            310
+          ]
+        ]
+      },
+      {
+        "id": "nimbo-base",
+        "bounds": [
+          437,
+          66,
+          745,
+          346
+        ],
+        "headBounds": [
+          563,
+          122,
+          703,
+          254
+        ],
+        "forehead": [
+          638,
+          142
+        ],
+        "eyes": [
+          650,
+          192
+        ],
+        "neck": [
+          641,
+          254
+        ],
+        "wrists": [
+          [
+            576,
+            293
+          ],
+          [
+            693,
+            293
+          ]
+        ]
+      },
+      {
+        "id": "gema-base",
+        "bounds": [
+          828,
+          76,
+          1101,
+          355
+        ],
+        "headBounds": [
+          947,
+          141,
+          1102,
+          271
+        ],
+        "forehead": [
+          1023,
+          153
+        ],
+        "eyes": [
+          1040,
+          206
+        ],
+        "neck": [
+          1038,
+          270
+        ],
+        "wrists": [
+          [
+            921,
+            322
+          ],
+          [
+            1063,
+            320
+          ]
+        ]
+      },
+      {
+        "id": "vesper-base",
+        "bounds": [
+          1157,
+          39,
+          1537,
+          339
+        ],
+        "headBounds": [
+          1283,
+          153,
+          1423,
+          251
+        ],
+        "forehead": [
+          1366,
+          155
+        ],
+        "eyes": [
+          1365,
+          208
+        ],
+        "neck": [
+          1364,
+          262
+        ],
+        "wrists": [
+          [
+            1260,
+            257
+          ],
+          [
+            1472,
+            257
+          ]
+        ]
+      },
+      {
+        "id": "astra-base",
+        "bounds": [
+          1585,
+          20,
+          1905,
+          356
+        ],
+        "headBounds": [
+          1758,
+          126,
+          1905,
+          236
+        ],
+        "forehead": [
+          1856,
+          124
+        ],
+        "eyes": [
+          1858,
+          174
+        ],
+        "neck": [
+          1858,
+          236
+        ],
+        "wrists": [
+          [
+            1772,
+            306
+          ],
+          [
+            1857,
+            301
+          ]
+        ]
+      },
+      {
+        "id": "luma-final",
+        "bounds": [
+          14,
+          372,
+          364,
+          769
+        ],
+        "headBounds": [
+          239,
+          474,
+          364,
+          571
+        ],
+        "forehead": [
+          319,
+          484
+        ],
+        "eyes": [
+          320,
+          530
+        ],
+        "neck": [
+          310,
+          587
+        ],
+        "wrists": [
+          [
+            170,
+            711
+          ],
+          [
+            290,
+            711
+          ]
+        ]
+      },
+      {
+        "id": "nimbo-final",
+        "bounds": [
+          388,
+          382,
+          771,
+          765
+        ],
+        "headBounds": [
+          574,
+          449,
+          704,
+          552
+        ],
+        "forehead": [
+          646,
+          457
+        ],
+        "eyes": [
+          645,
+          497
+        ],
+        "neck": [
+          641,
+          558
+        ],
+        "wrists": [
+          [
+            557,
+            693
+          ],
+          [
+            738,
+            682
+          ]
+        ]
+      },
+      {
+        "id": "gema-final",
+        "bounds": [
+          782,
+          373,
+          1148,
+          774
+        ],
+        "headBounds": [
+          965,
+          491,
+          1108,
+          611
+        ],
+        "forehead": [
+          1036,
+          501
+        ],
+        "eyes": [
+          1052,
+          558
+        ],
+        "neck": [
+          1034,
+          610
+        ],
+        "wrists": [
+          [
+            930,
+            716
+          ],
+          [
+            1103,
+            716
+          ]
+        ]
+      },
+      {
+        "id": "vesper-final",
+        "bounds": [
+          1107,
+          365,
+          1602,
+          762
+        ],
+        "headBounds": [
+          1306,
+          450,
+          1464,
+          567
+        ],
+        "forehead": [
+          1396,
+          464
+        ],
+        "eyes": [
+          1399,
+          518
+        ],
+        "neck": [
+          1383,
+          577
+        ],
+        "wrists": [
+          [
+            1223,
+            571
+          ],
+          [
+            1532,
+            552
+          ]
+        ]
+      },
+      {
+        "id": "astra-final",
+        "bounds": [
+          1567,
+          342,
+          1977,
+          777
+        ],
+        "headBounds": [
+          1797,
+          432,
+          1920,
+          545
+        ],
+        "forehead": [
+          1858,
+          439
+        ],
+        "eyes": [
+          1869,
+          484
+        ],
+        "neck": [
+          1859,
+          546
+        ],
+        "wrists": [
+          [
+            1740,
+            699
+          ],
+          [
+            1926,
+            699
+          ]
+        ]
+      }
+    ]
+  },
+  "accessories": {
+    "file": "accessories-v6.png",
+    "width": 2172,
+    "height": 724,
+    "sprites": [
+      {
+        "id": "cap",
+        "bounds": [
+          39,
+          148,
+          571,
+          520
+        ]
+      },
+      {
+        "id": "glasses",
+        "bounds": [
+          587,
+          170,
+          1189,
+          533
+        ]
+      },
+      {
+        "id": "necklace",
+        "bounds": [
+          1215,
+          184,
+          1680,
+          562
+        ]
+      },
+      {
+        "id": "bracer",
+        "bounds": [
+          1727,
+          223,
+          2118,
+          516
+        ]
+      }
+    ]
+  }
+}
