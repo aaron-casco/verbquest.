@@ -39,8 +39,17 @@ test('Temporadas aisladas: un acierto adicional gana aunque tarde más',()=>{
 });
 test('Monedas por acierto: 5 práctica, 2 repaso, 0 competitivo; solo errores recientes',()=>{
  assert.equal(rewardFor('practice',25),125);assert.equal(rewardFor('review',2),4);assert.equal(rewardFor('arena',25),0);
+ for(const [game,practice,review] of [['recall',5,2],['portals',3,2],['chain',2,1],['detective',3,2],['roulette',5,3]]){assert.equal(rewardFor('practice',7,game),7*practice);assert.equal(rewardFor('review',3,game),3*review);assert.equal(rewardFor('initial',7,game),0);assert.equal(rewardFor('arena',7,game),0);assert.equal(rewardFor('practice',0,game),0);}
  const p={reviews:{'old:1':{wrong:500}},lastErrors:[{verb:'be',col:1}]};assert.deepEqual(latestErrors(p,DEMO_VERBS),p.lastErrors);
 });
 test('Biblioteca incluye 9 ejemplos para cada entrada de la lista',()=>{for(const v of DEMO_VERBS){const groups=examples(v);assert.equal(groups.length,3);assert(groups.every(g=>g.sentences.length===3));}});
 
 test('Cut distractors model false regular forms without unrelated cat',()=>{const cut=DEMO_VERBS.find(v=>v.forms[0]==='cut');for(const col of [1,2]){const choices=distractors(cut,col,DEMO_VERBS);assert(!choices.includes('cat'));assert(choices.includes('cuted'));assert(choices.includes('cutted'));}});
+
+import {examReward,examReviewQuestions} from './gameplay.js';
+test('Simulacro: premios por fallos y repaso de cada palabra fallada',()=>{
+ for(const [errors,coins] of [[0,90],[1,85],[2,80],[3,75],[4,0],[20,0]])assert.equal(examReward(errors),coins);
+ assert.equal(examReward(1,false),0);assert.equal(examReward(-1),0);
+ const v=DEMO_VERBS[0],p={lastErrors:[{verb:v.id,col:1},{verb:v.id,col:2}]};
+ const qs=examReviewQuestions(p,DEMO_VERBS);assert.equal(qs.length,2);assert.deepEqual(qs.map(q=>q.col),[1,2]);assert(qs.every(q=>q.mode==='single'&&q.given!==q.col));assert.equal(rewardFor('review',2,'exam'),4);
+});

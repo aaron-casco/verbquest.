@@ -17,4 +17,8 @@ export function makeQuestion(v,mode,verbs,random=Math.random){
 }
 export function seasonRanks(profiles,seasonId){return profiles.filter(p=>!p.blocked).map(p=>({p,best:p.attempts.filter(a=>a.season===seasonId&&!a.inProgress&&!a.abandoned).sort((a,b)=>b.correct-a.correct||a.time-b.time)[0]})).filter(r=>r.best).sort((a,b)=>b.best.correct-a.best.correct||a.best.time-b.best.time||a.p.id.localeCompare(b.p.id));}
 export function latestErrors(profile,verbs){return (profile.lastErrors||[]).filter(c=>verbs.some(v=>v.id===c.verb));}
-export function rewardFor(type,correct){return type==='review'?correct*2:type==='practice'?correct*5:0;}
+export const COIN_RATES=Object.freeze({recall:[5,2],portals:[3,2],chain:[2,1],detective:[3,2],roulette:[5,3]});
+export function rewardFor(type,correct,game='recall'){const rates=COIN_RATES[game]||COIN_RATES.recall;return type==='review'?correct*rates[1]:type==='practice'?correct*rates[0]:0;}
+
+export function examReward(errors,passed=true){return passed&&Number.isInteger(errors)&&errors>=0&&errors<=3?90-5*errors:0;}
+export function examReviewQuestions(profile,verbs){return latestErrors(profile,verbs).map(c=>({v:verbs.find(v=>v.id===c.verb),mode:'single',col:c.col,given:(c.col+1)%3}));}
