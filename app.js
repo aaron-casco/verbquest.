@@ -66,6 +66,7 @@ async function cloudLogin(form,data){
 }
 async function bootstrapCloud(){if(localDemo)return;try{const info=await account('session');cloudUser=info.user;moderatorReview=info.administrator;await loadCloud();}catch(e){if(e.status!==401)cloudError=e.message;}finally{authLoading=false;render();}}
 let helpPending=null,tutorSelection=[],rouletteAngle=0,countdownTimer=null;
+const selectedSales=new Set();
 let route=location.hash.slice(1)||'home', tab='games', quiz=null, exam=null, result=null, chat=[], installPrompt=null;
 let profile=()=>db.profiles.find(p=>p.id===db.session);
 function save(){for(const p of db.profiles)if(!p.cloudRanking)ensureCollection(p);try{localStorage.setItem('verbquest-v1',JSON.stringify(db));}catch{toast('No se ha podido guardar. Revisa el espacio del navegador.');}enqueueCloud();}

@@ -57,3 +57,14 @@ dialog[data-privacy=true] .modal-close{display:none}.tour-card .btn.tour-target:
 
 /* Account entry uses the same layout as the original welcome page. */
 .entry-layout .entry-form{min-width:0;width:100%}.entry-layout input,.entry-layout button{max-width:100%;min-width:0}.entry-layout [hidden]{display:none!important}.auth-error{padding:12px 14px;border-radius:12px;background:#fff0ef;color:#8f2e3b;font-size:.875rem;overflow-wrap:anywhere}.entry-form .fine-print{overflow-wrap:anywhere}
+
+/* Keep the guided actions comfortably tappable on narrow screens. */
+.companion>div{min-width:0;flex:1}
+.companion.tour-active .btn{min-height:48px;white-space:normal;touch-action:manipulation}
+@media(max-width:700px){
+ .companion.tour-active{max-width:none;max-height:calc(100dvh - 110px);overflow-y:auto;bottom:calc(84px + env(safe-area-inset-bottom));}
+ .companion.tour-active>div{max-width:none}
+ .companion.tour-active .btn{width:100%;font-size:.875rem;padding:12px}
+ .companion.tour-active .small-link{display:block;margin:8px 0 0;min-height:36px;padding:8px 0}
+ .companion.tour-active .tour-target:before{content:none}
+}
