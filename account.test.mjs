@@ -33,5 +33,5 @@ test('verified student cannot edit another profile or change the season even wit
  const session=Buffer.from(JSON.stringify({access:'fake-test-access'})).toString('base64url');
  const req={method:'POST',headers:{origin:'https://verbquest.vercel.app',host:'verbquest.vercel.app',cookie:`__Host-vq-session=${session}`},body:{profile:{id:'22222222-2222-4222-8222-222222222222'},administrator:true}};
  let code;const res={setHeader(){},status(n){code=n;return this;},json(){return this;}};
- try{for(const mode of ['save','config','delete']){await handler({...req,query:{mode}},res);assert.equal(code,403);}assert.equal(calls,3);}finally{globalThis.fetch=oldFetch;if(oldUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=oldUrl;if(oldKey===undefined)delete process.env.SUPABASE_ANON_KEY;else process.env.SUPABASE_ANON_KEY=oldKey;}
+ try{for(const mode of ['save','config','delete','reset']){await handler({...req,query:{mode}},res);assert.equal(code,403);}assert.equal(calls,4);}finally{globalThis.fetch=oldFetch;if(oldUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=oldUrl;if(oldKey===undefined)delete process.env.SUPABASE_ANON_KEY;else process.env.SUPABASE_ANON_KEY=oldKey;}
 });

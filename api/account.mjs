@@ -62,6 +62,14 @@ export default async function handler(req,res){
    const rows=await call(`/rest/v1/vq_config?id=eq.1&revision=eq.${Number(body.revision)||0}`,{method:'PATCH',token:session.access,data:{state:body.config,revision:(Number(body.revision)||0)+1},prefer:'return=representation'});
    if(!rows.length)return res.status(409).json({error:'La configuración cambió en otra sesión. Recarga antes de editar.'});return res.status(200).json({revision:rows[0].revision});
   }
+  if(mode==='reset'&&req.method==='POST'){
+   if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
+   const all=body.all===true,id=String(body.id||'');
+   if(body.confirm!=='REINICIAR')return res.status(400).json({error:'Escribe REINICIAR para confirmar.'});
+   if(!all&&(id===user.id||!/^[0-9a-f-]{36}$/i.test(id)))return res.status(400).json({error:'No puedes reiniciar esa cuenta.'});
+   const count=await call('/rest/v1/rpc/vq_reset_accounts',{method:'POST',token:session.access,data:{target_id:all?null:id,reset_all:all}});
+   return res.status(200).json({count});
+  }
   if(mode==='delete'&&req.method==='POST'){
    if(!admin||body.id===user.id)return res.status(403).json({error:'No puedes eliminar ese perfil.'});
    if(!/^[0-9a-f-]{36}$/i.test(String(body.id)))return res.status(400).json({error:'Perfil incorrecto.'});
