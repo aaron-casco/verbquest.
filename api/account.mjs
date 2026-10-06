@@ -5,6 +5,15 @@ const cookieName='__Host-vq-session';
 function cookie(value,age=3600){return `${cookieName}=${value}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${age}`;}
 function sessionCookie(req){try{return JSON.parse(Buffer.from((req.headers.cookie||'').split('; ').find(x=>x.startsWith(cookieName+'='))?.slice(cookieName.length+1)||'','base64url').toString());}catch{return {};}}
 export function sameOrigin(req){try{return new URL(req.headers.origin).host===req.headers.host;}catch{return false;}}
+export function publicFailure(e,mode){
+ if(e.code==='email_not_confirmed')return {status:403,error:'Confirma tu correo antes de iniciar sesión. Revisa el mensaje de Supabase.'};
+ if(e.code==='invalid_credentials'||(mode==='login'&&[400,422].includes(e.status)))return {status:401,error:'El correo o la contraseña no coinciden. Usa la contraseña de tu cuenta de Supabase.'};
+ if(e.status===429)return {status:429,error:'Has realizado demasiados intentos. Espera un momento antes de repetir.'};
+ if(e.status===401)return {status:401,error:'Tu sesión ha caducado. Vuelve a iniciar sesión.'};
+ if(e.status===409||/revision_conflict/.test(e.message))return {status:409,error:'El progreso cambió en otra sesión. Recarga antes de continuar.'};
+ if(mode==='signup'&&[400,422].includes(e.status))return {status:400,error:'No se pudo crear la cuenta. Si ya la creaste en Supabase, pulsa «Ya tengo cuenta» e inicia sesión.'};
+ return {status:503,error:/vq_|schema cache|does not exist/.test(e.message)?'Falta ejecutar la configuración SQL de VerbQuest en Supabase.':'No se pudo conectar con las cuentas. Reinténtalo.'};
+}
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('Vary','Cookie');
  const url=process.env.SUPABASE_URL,key=process.env.SUPABASE_ANON_KEY;
@@ -16,7 +25,7 @@ export default async function handler(req,res){
  if(Buffer.byteLength(JSON.stringify(body))>300000)return res.status(413).json({error:'Demasiados datos.'});
  async function call(path,{method='GET',data,token,prefer}={}){
   const response=await fetch(url.replace(/\/$/,'')+path,{method,headers:{apikey:key,'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`} :{}),...(prefer?{Prefer:prefer}:{})},...(data?{body:JSON.stringify(data)}:{})});
-  const json=await response.json().catch(()=>null);if(!response.ok){const e=new Error(json?.msg||json?.message||json?.error_description||'No se pudo completar la solicitud.');e.status=response.status;throw e;}return json;
+  const json=await response.json().catch(()=>null);if(!response.ok){const e=new Error(json?.msg||json?.message||json?.error_description||'No se pudo completar la solicitud.');e.status=response.status;e.code=json?.code||json?.error_code;throw e;}return json;
  }
  function setSession(s){res.setHeader('Set-Cookie',cookie(Buffer.from(JSON.stringify({access:s.access_token,refresh:s.refresh_token})).toString('base64url'),60*60*24*7));}
  try{
@@ -60,5 +69,5 @@ export default async function handler(req,res){
    return res.status(400).json({error:'Usa Bloquear para conservar el progreso. La eliminación definitiva no está habilitada.'});
   }
   return res.status(404).json({error:'Acción desconocida.'});
- }catch(e){const status=e.status===401?401:e.status===409||/revision_conflict/.test(e.message)?409:503;return res.status(status).json({error:status===401?'Correo o contraseña incorrectos, o sesión caducada.':status===409?'El progreso cambió en otra sesión. Recarga antes de continuar.':/vq_|schema cache|does not exist/.test(e.message)?'Falta ejecutar la configuración SQL de VerbQuest en Supabase.':'No se pudo conectar con las cuentas. Reinténtalo.'});}
+ }catch(e){const failure=publicFailure(e,mode);console.warn('account_request_failed',{mode,status:e.status||503,code:e.code||'connection_failure'});return res.status(failure.status).json({error:failure.error});}
 }

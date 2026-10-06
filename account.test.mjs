@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import handler,{isAdministrator,sameOrigin} from './api/account.mjs';
+import handler,{isAdministrator,sameOrigin,publicFailure} from './api/account.mjs';
 import {ADMIN_EMAIL} from './api/admin-session.mjs';
 test('moderator permission requires confirmed provider identity, never local fields',()=>{
  assert.equal(isAdministrator({id:'a',email:ADMIN_EMAIL,email_confirmed_at:'date'}),true);
@@ -12,6 +12,13 @@ test('cross-origin writes are rejected',()=>{
  assert.equal(sameOrigin({headers:{origin:'https://verbquest.vercel.app',host:'verbquest.vercel.app'}}),true);
  assert.equal(sameOrigin({headers:{origin:'https://attacker.test',host:'verbquest.vercel.app'}}),false);
  assert.equal(sameOrigin({headers:{host:'verbquest.vercel.app'}}),false);
+});
+test('provider credential and confirmation failures do not masquerade as network outages',()=>{
+ assert.equal(publicFailure({status:400,code:'invalid_credentials',message:'Invalid login credentials'},'login').status,401);
+ assert.equal(publicFailure({status:400,code:'email_not_confirmed',message:'Email not confirmed'},'login').status,403);
+ assert.equal(publicFailure({status:429,message:'rate limit'},'login').status,429);
+ assert.equal(publicFailure({status:422,message:'invalid signup'},'signup').status,400);
+ assert.equal(publicFailure(new Error('fetch failed'),'login').status,503);
 });
 test('unauthenticated requests never reach profile writes',async()=>{
  const oldUrl=process.env.SUPABASE_URL,oldKey=process.env.SUPABASE_ANON_KEY;
