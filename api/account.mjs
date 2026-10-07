@@ -6,6 +6,7 @@ function cookie(value,age=3600){return `${cookieName}=${value}; Path=/; HttpOnly
 function sessionCookie(req){try{return JSON.parse(Buffer.from((req.headers.cookie||'').split('; ').find(x=>x.startsWith(cookieName+'='))?.slice(cookieName.length+1)||'','base64url').toString());}catch{return {};}}
 export function sameOrigin(req){try{return new URL(req.headers.origin).host===req.headers.host;}catch{return false;}}
 export function publicFailure(e,mode){
+ if(/competitive_access_denied/.test(e.message))return {status:403,error:'Tu acceso al competitivo está desactivado. Recarga para continuar con prácticas y simulacros.'};
  if(e.code==='email_not_confirmed')return {status:403,error:'Confirma tu correo antes de iniciar sesión. Revisa el mensaje de Supabase.'};
  if(e.code==='invalid_credentials'||(mode==='login'&&[400,422].includes(e.status)))return {status:401,error:'El correo o la contraseña no coinciden. Usa la contraseña de tu cuenta de Supabase.'};
  if(e.status===429)return {status:429,error:'Has realizado demasiados intentos. Espera un momento antes de repetir.'};
@@ -48,7 +49,8 @@ export default async function handler(req,res){
    const own=await call(`/rest/v1/vq_profiles?user_id=eq.${user.id}&select=state,revision`,{token:session.access});
    const config=await call('/rest/v1/vq_config?id=eq.1&select=state,revision',{token:session.access});
    const profiles=admin?await call('/rest/v1/vq_profiles?select=user_id,state,revision',{token:session.access}):await call('/rest/v1/rpc/vq_public_profiles',{method:'POST',data:{},token:session.access});
-   return res.status(200).json({own:own[0]||null,config:config[0],profiles,administrator:admin,user:{id:user.id,email:user.email,name:String(user.user_metadata?.name||'').slice(0,32)}});
+   let seasonRewards=[];try{seasonRewards=await call('/rest/v1/vq_season_rewards?select=season_id,amount,position,claimed_at',{token:session.access});}catch(e){if(e.status!==404)throw e;}
+   return res.status(200).json({seasonRewards,own:own[0]||null,config:config[0],profiles,administrator:admin,user:{id:user.id,email:user.email,name:String(user.user_metadata?.name||'').slice(0,32)}});
   }
   if(mode==='save'&&req.method==='POST'){
    const id=String(body.profile?.id||'');if(id!==user.id&&!admin)return res.status(403).json({error:'No tienes permisos sobre ese perfil.'});
@@ -57,6 +59,15 @@ export default async function handler(req,res){
    return res.status(200).json({revision:output});
   }
   if(mode==='claim'&&req.method==='POST')return res.status(200).json({profile:await call('/rest/v1/rpc/vq_claim_award',{method:'POST',token:session.access,data:{award_id:String(body.id||'')}})});
+  if(mode==='season-close'&&req.method==='POST'){
+   if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
+   const block=Number(body.block);if(!Number.isInteger(block)||block<0||block>3)return res.status(400).json({error:'Examen incorrecto.'});
+   return res.status(200).json(await call('/rest/v1/rpc/vq_close_season',{method:'POST',token:session.access,data:{expected_revision:Number(body.revision)||0,next_block:block,finish_only:body.finishOnly===true}}));
+  }
+  if(mode==='season-claim'&&req.method==='POST'){
+   if(typeof body.id!=='string'||!body.id||body.id.length>100)return res.status(400).json({error:'Temporada incorrecta.'});
+   return res.status(200).json(await call('/rest/v1/rpc/vq_claim_season_reward',{method:'POST',token:session.access,data:{season_id:body.id}}));
+  }
   if(mode==='config'&&req.method==='POST'){
    if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
    const rows=await call(`/rest/v1/vq_config?id=eq.1&revision=eq.${Number(body.revision)||0}`,{method:'PATCH',token:session.access,data:{state:body.config,revision:(Number(body.revision)||0)+1},prefer:'return=representation'});

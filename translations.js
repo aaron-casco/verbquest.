@@ -2284,3 +2284,24 @@ Object.assign(EN,{
  'Repasa el significado de este verbo.':'Review the meaning of this verb.',
  'Traduce al español el verbo que aparece en inglés. Una de las traducciones aceptadas es suficiente. Si fallas, verás sus significados y podrás repasarlos. Practicarás todos los verbos del examen seleccionado.':'Translate the English verb into Spanish. One accepted meaning is enough. Mistakes show the meanings so you can review them. You will practise every verb in the selected exam.'
 });
+
+Object.assign(EN,{
+ 'Finalizar temporada sin abrir otra':'End season without opening another',
+ 'Finalizar temporada':'End season',
+ 'Temporada finalizada':'Season ended',
+ 'Esta temporada ha terminado. Espera la próxima competición.':'This season has ended. Wait for the next competition.',
+ 'Cierra el ranking actual y prepara las recompensas: 500, 400, 300, 200 y 200 VC. El resto de participantes recibe 75 VC.':'Close the current leaderboard and prepare rewards: 500, 400, 300, 200 and 200 VC. Other participants receive 75 VC.',
+ 'Se guardará la clasificación y se prepararán las recompensas. No se podrán jugar más rondas hasta abrir otra temporada.':'The standings and rewards will be saved. No more rounds can be played until another season opens.',
+ 'Reclamar recompensa':'Claim reward',
+ 'Participa la próxima vez para ganar monedas':'Participate next time to earn coins',
+ 'Temporada finalizada. Las recompensas están preparadas.':'Season ended. Rewards are ready.',
+ 'Recarga antes de reclamar la recompensa.':'Reload before claiming your reward.',
+ 'Recarga antes de cambiar la temporada.':'Reload before changing the season.'
+});
+
+Object.assign(EN,{
+ 'Permitir acceso al modo competitivo':'Allow competitive mode access',
+ 'Al desactivarlo verá simulacros en su lugar. Conserva sus rondas y puntuaciones anteriores.':'When disabled, mock exams replace competitive mode. Previous rounds and scores are preserved.',
+ 'Prepara tu examen a tu ritmo.':'Prepare for your exam at your own pace.',
+ 'El competitivo está reservado a los alumnos autorizados. Puedes practicar y hacer simulacros.':'Competitive mode is restricted to authorized students. You can practice and take mock exams.'
+});
