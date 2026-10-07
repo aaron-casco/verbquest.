@@ -1,4 +1,4 @@
-const CACHE='verbquest-accounts-v9.6';
+const CACHE='verbquest-accounts-v9.7';
 const FILES=['./','./index.html','./styles.css','./app.js','./cloud.js','./i18n.js','./audio.js','./preferences.js','./translations.js','./core.js','./data.js','./pets.js','./anatomy.js','./gameplay.js','./tutor.js','./collection.js','./roulette.js','./celebrations.js','./accessory-style.js','./colour-layers.js','./reminders.js','./assets/starters-v6.png','./assets/collectors-v6.png','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
