@@ -2276,3 +2276,11 @@ export const EN_PATTERNS=[
 ];
 
 Object.assign(EN,{"Cambiar mi nombre":"Change my name"});
+
+Object.assign(EN,{
+ 'TRADUCE':'TRANSLATE','Inglés → español':'English → Spanish','Escribe su significado en español':'Write its meaning in Spanish','Traducción al español':'Spanish translation','Una traducción válida es suficiente':'One valid translation is enough',
+ 'Puedes escribir cualquiera de las traducciones aceptadas. Se admiten mayúsculas y respuestas sin tildes.':'Write any accepted translation. Capital letters and missing accents are accepted.',
+ 'Escribe el significado de cada verbo en español.':'Write the meaning of each verb in Spanish.',
+ 'Repasa el significado de este verbo.':'Review the meaning of this verb.',
+ 'Traduce al español el verbo que aparece en inglés. Una de las traducciones aceptadas es suficiente. Si fallas, verás sus significados y podrás repasarlos. Practicarás todos los verbos del examen seleccionado.':'Translate the English verb into Spanish. One accepted meaning is enough. Mistakes show the meanings so you can review them. You will practise every verb in the selected exam.'
+});

@@ -1,3 +1,3 @@
 import {mkdir,cp,rm} from 'node:fs/promises';
-const files=['index.html','styles.css','app.js','cloud.js','i18n.js','audio.js','preferences.js','translations.js','core.js','data.js','pets.js','anatomy.js','gameplay.js','tutor.js','collection.js','roulette.js','celebrations.js','accessory-style.js','colour-layers.js','reminders.js','assets','sw.js','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png'];
+const files=['index.html','styles.css','app.js','cloud.js','i18n.js','audio.js','preferences.js','translations.js','core.js','data.js','pets.js','anatomy.js','gameplay.js','translator.js','tutor.js','collection.js','roulette.js','celebrations.js','accessory-style.js','colour-layers.js','reminders.js','assets','sw.js','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png'];
 await rm('dist',{recursive:true,force:true});await mkdir('dist');for(const f of files)await cp(f,`dist/${f}`,{recursive:true});console.log('Demo preparada en dist/');

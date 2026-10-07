@@ -1384,7 +1384,7 @@ export const PETS = [
 ];
 export const GAMES = [
   {id:'recall',name:'Memoria activa',tag:'ESCRIBE',icon:'brain',price:0,color:'purple',description:'Recuerda las formas sin ninguna pista.'},
-  {id:'portals',name:'Portal correcto',tag:'ELIGE',icon:'portal',price:40,color:'mint',description:'Abre el portal con la forma que falta.'},
+  {id:'portals',name:'Verbs Translator',tag:'TRADUCE',icon:'book',price:40,color:'mint',description:'Escribe el significado de cada verbo en español.'},
   {id:'chain',name:'Cadena de formas',tag:'ORDENA',icon:'chain',price:70,color:'peach',description:'Construye infinitivo, pasado y participio.'},
   {id:'detective',name:'Cazafallos',tag:'CORRIGE',icon:'search',price:100,color:'pink',description:'Encuentra al intruso y repara la cadena.'},
   {id:'roulette',name:'Ruleta verbal',tag:'GIRA Y COMPLETA',icon:'roulette',price:140,color:'blue',description:'Gira la ruleta y completa las formas de cinco verbos. Recorre todo tu examen.'},
