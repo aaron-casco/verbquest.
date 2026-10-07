@@ -87,3 +87,5 @@ dialog[data-privacy=true] .modal-close{display:none}.tour-card .btn.tour-target:
  .companion-bubble{bottom:calc(92px + env(safe-area-inset-bottom))}
  .quiz-card,.roulette-card,.collection-panel,.pet-preview{min-width:0}
 }
+
+.account-menu{display:grid;gap:12px;margin-top:20px}#preferences-form input[type=range]{width:100%;min-height:44px;padding:0;accent-color:#7954ed}#preferences-form output{float:right;font-weight:700}#preferences-form label{margin-top:20px}

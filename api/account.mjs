@@ -65,6 +65,7 @@ export default async function handler(req,res){
   if(mode==='reset'&&req.method==='POST'){
    if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
    const all=body.all===true,id=String(body.id||'');
+   if(body.self===true){if(body.confirm!=='REINICIAR')return res.status(400).json({error:'Escribe REINICIAR para confirmar.'});await call('/rest/v1/rpc/vq_reset_moderator_progress',{method:'POST',token:session.access,data:{}});return res.status(200).json({count:1,self:true});}
    if(body.confirm!=='REINICIAR')return res.status(400).json({error:'Escribe REINICIAR para confirmar.'});
    if(!all&&(id===user.id||!/^[0-9a-f-]{36}$/i.test(id)))return res.status(400).json({error:'No puedes reiniciar esa cuenta.'});
    const count=await call('/rest/v1/rpc/vq_reset_accounts',{method:'POST',token:session.access,data:{target_id:all?null:id,reset_all:all}});
