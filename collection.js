@@ -23,3 +23,6 @@ export function evolutionPrice(p){return finalStage(p)===1?350:p.pet.stage===0?1
 
 export const STARTER_PRICE=700;
 export function purchaseStarter(p,species){ensureCollection(p);const def=starterDefs().find(d=>d.id===species);if(!def)return {ok:false,reason:'species'};if(Object.keys(p.creatures).length>=COLLECTION_LIMIT)return {ok:false,reason:'capacity'};if(!Number.isSafeInteger(p.coins)||p.coins<STARTER_PRICE)return {ok:false,reason:'coins'};const pet=newCreature(def);p.coins-=STARTER_PRICE;p.creatures[pet.instanceId]=pet;p.pet=pet;return {ok:true,creature:pet};}
+
+// Default species names follow the equipped evolution; explicit nicknames stay personal.
+export function creatureName(pet){if(!pet)return "";const def=PETS.find(d=>d.id===pet.species);if(!def)return pet.name||"";const defaultNames=[def.name,...def.stages];return pet.customName||pet.name&&!defaultNames.includes(pet.name)?pet.name:def.stages[pet.stage]||def.name;}

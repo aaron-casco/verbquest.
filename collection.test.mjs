@@ -10,3 +10,11 @@ test('700 VC starter change creates baby, preserves former evolution and blocks 
 
 test('Batch purchases charge 150 each and reserve all capacity atomically',async()=>{const {purchaseDiscoveries,finishDiscoveries}=await import('./collection.js');const p=make(10000);ensureCollection(p);const a=purchaseDiscoveries(p,10,()=>0);assert(a.ok);assert.equal(a.results.length,10);assert.equal(p.coins,8500);assert.equal(Object.keys(p.creatures).length,11);assert.equal(new Set(a.results.map(r=>r.creature.instanceId)).size,10);assert.equal(purchaseDiscoveries(p,5).reason,'pending');finishDiscoveries(p);assert(purchaseDiscoveries(p,10,()=>0).ok);finishDiscoveries(p);const before=p.coins;assert.equal(purchaseDiscoveries(p,10).reason,'capacity');assert.equal(p.coins,before);assert.equal(Object.keys(p.creatures).length,21);assert(purchaseDiscoveries(p,5,()=>0).ok);});
 test('Direct and bulk sale refund once, preserve discovered catalog, protect active/starter',async()=>{const {purchaseDiscoveries,sellDiscovered,sellCreatures,finishDiscoveries}=await import('./collection.js');const p=make(3000),batch=purchaseDiscoveries(p,5,()=>0),ids=batch.results.map(r=>r.creature.instanceId);assert.equal(sellDiscovered(p,ids[0]).refund,80);assert(!sellDiscovered(p,ids[0]).ok);finishDiscoveries(p);const coins=p.coins;assert(!sellCreatures(p,['lumio',ids[1]]).ok);assert.equal(p.coins,coins);assert.equal(sellCreatures(p,[ids[1],ids[1],ids[2]]).refund,160);assert(p.discoveredSpecies.includes('luma'));assert.equal(Object.keys(p.creatures).length,3);switchCreature(p,ids[3]);assert(!sellCreatures(p,[ids[3],ids[4]]).ok);});
+
+
+test('Evolution names follow the equipped stage while personal nicknames survive',async()=>{
+ const {creatureName}=await import('./collection.js');
+ const pet={species:'lumio',stage:0,name:'Lumio'};
+ assert.equal(creatureName(pet),'Lumio');pet.stage=1;assert.equal(creatureName(pet),'Lumir');pet.stage=2;assert.equal(creatureName(pet),'Lumion');
+ pet.name='Chispa';assert.equal(creatureName(pet),'Chispa');pet.name='Lumio';pet.customName=true;assert.equal(creatureName(pet),'Lumio');
+});

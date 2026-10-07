@@ -42,13 +42,13 @@ export default async function handler(req,res){
   try{user=await call('/auth/v1/user',{token:session.access});}catch(e){if(e.status!==401&&e.status!==403)throw e;if(!session.refresh)throw e;const s=await call('/auth/v1/token?grant_type=refresh_token',{method:'POST',data:{refresh_token:session.refresh}});setSession(s);session={access:s.access_token,refresh:s.refresh_token};user=await call('/auth/v1/user',{token:session.access});}
   if(!user.email_confirmed_at)return res.status(403).json({error:'Confirma tu correo antes de entrar.'});
   if(mode==='logout'){if(req.method!=='POST')return res.status(405).json({error:'Método no permitido.'});res.setHeader('Set-Cookie',cookie('',0));await call('/auth/v1/logout',{method:'POST',token:session.access}).catch(()=>{});return res.status(200).json({ok:true});}
-  if(mode==='session')return res.status(200).json({user:{id:user.id,email:user.email},administrator:isAdministrator(user)});
+  if(mode==='session')return res.status(200).json({user:{id:user.id,email:user.email,name:String(user.user_metadata?.name||'').slice(0,32)},administrator:isAdministrator(user)});
   const admin=isAdministrator(user);
   if(mode==='state'&&req.method==='GET'){
    const own=await call(`/rest/v1/vq_profiles?user_id=eq.${user.id}&select=state,revision`,{token:session.access});
    const config=await call('/rest/v1/vq_config?id=eq.1&select=state,revision',{token:session.access});
    const profiles=admin?await call('/rest/v1/vq_profiles?select=user_id,state,revision',{token:session.access}):await call('/rest/v1/rpc/vq_public_profiles',{method:'POST',data:{},token:session.access});
-   return res.status(200).json({own:own[0]||null,config:config[0],profiles,administrator:admin,user:{id:user.id,email:user.email}});
+   return res.status(200).json({own:own[0]||null,config:config[0],profiles,administrator:admin,user:{id:user.id,email:user.email,name:String(user.user_metadata?.name||'').slice(0,32)}});
   }
   if(mode==='save'&&req.method==='POST'){
    const id=String(body.profile?.id||'');if(id!==user.id&&!admin)return res.status(403).json({error:'No tienes permisos sobre ese perfil.'});

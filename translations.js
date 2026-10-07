@@ -2274,3 +2274,5 @@ export const EN_PATTERNS=[
   "$1: $2. Practise that block."
  ]
 ];
+
+Object.assign(EN,{"Cambiar mi nombre":"Change my name"});
