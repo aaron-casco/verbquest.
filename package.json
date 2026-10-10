@@ -7,7 +7,7 @@
     "start": "node server.mjs",
     "dev": "node server.mjs",
     "build": "node build.mjs",
-    "test": "node --test core.test.mjs notifications.test.mjs collection.test.mjs admin.test.mjs roulette.test.mjs colour-layers.test.mjs account.test.mjs preferences.test.mjs translator.test.mjs seasons.test.mjs"
+    "test": "node --test core.test.mjs notifications.test.mjs collection.test.mjs admin.test.mjs roulette.test.mjs colour-layers.test.mjs account.test.mjs preferences.test.mjs translator.test.mjs seasons.test.mjs update-v11.test.mjs evolution.test.mjs update-news.test.mjs"
   },
   "dependencies": {
     "web-push": "^3.6.7"

@@ -1,3 +1,4 @@
+import {eggSpecies} from './eggs.js';
 // Lista completa facilitada por Aarón. Cada entrada pertenece a un examen.
 export const DEMO_VERBS = [
   {
@@ -1382,9 +1383,10 @@ export const PETS = [
   {id:'vesper',name:'Vesper',kind:'Murciélago estelar',primary:'#8582ce',secondary:'#e6a1bd',description:'Dibuja constelaciones con sus alas.',stages:['Vesper','Vesperion'],collectible:true,rarity:'Rara',rarityClass:'rare',weight:12},
   {id:'astra',name:'Astra',kind:'Grifo celestial',primary:'#e8ba57',secondary:'#b299df',description:'Una criatura legendaria de luz y estrellas.',stages:['Astra','Astralis'],collectible:true,rarity:'Legendaria',rarityClass:'legendary',weight:3},
 ];
+PETS.push(...eggSpecies);
 export const GAMES = [
   {id:'recall',name:'Memoria activa',tag:'ESCRIBE',icon:'brain',price:0,color:'purple',description:'Recuerda las formas sin ninguna pista.'},
-  {id:'portals',name:'Verbs Translator',tag:'TRADUCE',icon:'book',price:40,color:'mint',description:'Escribe el significado de cada verbo en español.'},
+  {id:'portals',name:'Verbs Translator',tag:'TRADUCE',icon:'book',price:40,color:'mint',description:'Del español al inglés. Cambia de sentido cuando quieras.'},
   {id:'chain',name:'Cadena de formas',tag:'ORDENA',icon:'chain',price:70,color:'peach',description:'Construye infinitivo, pasado y participio.'},
   {id:'detective',name:'Cazafallos',tag:'CORRIGE',icon:'search',price:100,color:'pink',description:'Encuentra al intruso y repara la cadena.'},
   {id:'roulette',name:'Ruleta verbal',tag:'GIRA Y COMPLETA',icon:'roulette',price:140,color:'blue',description:'Gira la ruleta y completa las formas de cinco verbos. Recorre todo tu examen.'},

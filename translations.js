@@ -1,4 +1,8 @@
 export const EN={
+ 'Evolución gratuita tras 24 horas desde que la consigues.':'Free evolution 24 hours after acquisition.','Colores originales del Sol y la Luna.':'Original Sun and Moon colours.',
+ 'Español → inglés':'Spanish → English','Inglés → español':'English → Spanish',
+ 'Ranking por XP':'XP leaderboard','Elegir mascotas de exhibición':'Choose showcase creatures','Abrir huevos':'Open eggs','Bloqueado':'Locked','Sentido':'Direction','Del español al inglés. Cambia de sentido cuando quieras.':'From Spanish to English. Switch direction whenever you like.','Escribe el infinitivo en inglés':'Write the English infinitive','Escribe el verbo en infinitivo.':'Write the verb in the infinitive.','Una traducción válida es suficiente. Se aceptan sinónimos y respuestas sin tildes.':'One valid translation is enough. Synonyms and unaccented answers are accepted.','Sin descubrir':'Undiscovered','Traducción':'Translation','150 VC · cinco especies':'150 VC · five species','Máximo tres criaturas.':'Maximum three creatures.',
+
  "Hola,":"Hello,",
  "Inicio": "Home",
  "INICIO": "HOME",

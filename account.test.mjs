@@ -33,7 +33,7 @@ test('verified student cannot edit another profile or change the season even wit
  const session=Buffer.from(JSON.stringify({access:'fake-test-access'})).toString('base64url');
  const req={method:'POST',headers:{origin:'https://verbquest.vercel.app',host:'verbquest.vercel.app',cookie:`__Host-vq-session=${session}`},body:{profile:{id:'22222222-2222-4222-8222-222222222222'},administrator:true,self:true,confirm:'REINICIAR'}};
  let code;const res={setHeader(){},status(n){code=n;return this;},json(){return this;}};
- try{for(const mode of ['save','config','delete','reset','season-close']){await handler({...req,query:{mode}},res);assert.equal(code,403);}assert.equal(calls,5);}finally{globalThis.fetch=oldFetch;if(oldUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=oldUrl;if(oldKey===undefined)delete process.env.SUPABASE_ANON_KEY;else process.env.SUPABASE_ANON_KEY=oldKey;}
+ try{for(const mode of ['save','config','delete','reset','season-close','admin-evolve']){await handler({...req,query:{mode}},res);assert.equal(code,403);}assert.equal(calls,6);}finally{globalThis.fetch=oldFetch;if(oldUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=oldUrl;if(oldKey===undefined)delete process.env.SUPABASE_ANON_KEY;else process.env.SUPABASE_ANON_KEY=oldKey;}
 });
 test('Moderator self reset requires confirmation and uses the progress-only RPC',async()=>{
  const oldFetch=globalThis.fetch,oldUrl=process.env.SUPABASE_URL,oldKey=process.env.SUPABASE_ANON_KEY;process.env.SUPABASE_URL='https://example.test';process.env.SUPABASE_ANON_KEY='public';const calls=[];
@@ -50,4 +50,11 @@ test('Season reward claim uses authenticated identity and ignores client prize a
  const req={method:'POST',query:{mode:'season-claim'},headers:{origin:'https://verbquest.vercel.app',host:'verbquest.vercel.app',cookie:`__Host-vq-session=${session}`},body:{id:'s1',amount:500,user_id:'another'}};
  const res={setHeader(){},status(n){code=n;return this;},json(v){output=v;return this;}};
  try{await handler(req,res);assert.equal(code,200);assert.equal(output.amount,75);assert.deepEqual(JSON.parse(calls.at(-1).options.body),{season_id:'s1'});assert(calls.at(-1).url.endsWith('/rpc/vq_claim_season_reward'));}finally{globalThis.fetch=oldFetch;if(oldUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=oldUrl;if(oldKey===undefined)delete process.env.SUPABASE_ANON_KEY;else process.env.SUPABASE_ANON_KEY=oldKey;}
+});
+
+test('Legendary evolution delegates instance ownership and waiting time to the authenticated server RPC',async()=>{
+ const oldFetch=globalThis.fetch,oldUrl=process.env.SUPABASE_URL,oldKey=process.env.SUPABASE_ANON_KEY;process.env.SUPABASE_URL='https://example.test';process.env.SUPABASE_ANON_KEY='public';const calls=[];
+ globalThis.fetch=async(url,options)=>{calls.push({url,options});return {ok:true,json:async()=>url.endsWith('/auth/v1/user')?{id:'11111111-1111-4111-8111-111111111111',email:'student@educarex.es',email_confirmed_at:'date'}:{evolved:true}};};
+ const session=Buffer.from(JSON.stringify({access:'test'})).toString('base64url');let code;const res={setHeader(){},status(n){code=n;return this;},json(){return this;}};
+ try{await handler({method:'POST',query:{mode:'legendary-evolve'},headers:{origin:'https://verbquest.vercel.app',host:'verbquest.vercel.app',cookie:`__Host-vq-session=${session}`},body:{id:'owned-copy',user_id:'other',acquiredAt:'1900-01-01',coins:999999}},res);assert.equal(code,200);assert.deepEqual(JSON.parse(calls.at(-1).options.body),{instance_id:'owned-copy'});assert(calls.at(-1).url.endsWith('/rpc/vq_evolve_legendary'));assert.equal(publicFailure(new Error('legendary_not_ready'),'legendary-evolve').status,409);}finally{globalThis.fetch=oldFetch;if(oldUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=oldUrl;if(oldKey===undefined)delete process.env.SUPABASE_ANON_KEY;else process.env.SUPABASE_ANON_KEY=oldKey;}
 });

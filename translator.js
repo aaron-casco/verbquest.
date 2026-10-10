@@ -3,6 +3,18 @@ const BLOCK_MEANINGS=[["ser / estar", "golpear / vencer", "convertirse en / lleg
 const meanings=new Map();const signatures=new Map();
 for(let block=0;block<4;block++){const verbs=DEMO_VERBS.filter(v=>v.block===block);if(verbs.length!==BLOCK_MEANINGS[block].length)throw Error('Incomplete translation list');verbs.forEach((v,i)=>{meanings.set(v.id,BLOCK_MEANINGS[block][i]);signatures.set(v.forms.join('|'),BLOCK_MEANINGS[block][i]);});}
 export function spanishMeaning(v){return meanings.get(v.id)||signatures.get(v.forms.join('|'))||v.meaning||'';}
-export function translationQuestion(v){return {v,mode:'translator',col:3,expected:spanishMeaning(v)};}
+// Synonyms are explicit meanings, never fuzzy English spelling matches.
+const EXTRA={beat:['superar','derrotar','batir','latir'],begin:['comenzar','iniciar'],bend:['curvar','doblarse'],blow:['soplar'],catch:['capturar','agarrar'],dig:['excavar'],draw:['trazar'],fall:['caerse'],feed:['dar de comer'],fight:['combatir'],find:['hallar'],freeze:['helar'],get:['recibir'],give:['entregar'],hide:['ocultar','esconderse'],hold:['agarrar','mantener'],hurt:['lastimar','hacer daño'],keep:['conservar'],lead:['liderar','conducir'],leave:['irse','abandonar'],lend:['dar prestado'],light:['alumbrar'],put:['colocar','situar'],stand:['estar parado'],meet:['encontrarse con','reunirse con'],quit:['renunciar'],rise:['elevarse','ascender'],set:['fijar'],shake:['sacudir','agitar','temblar'],shine:['resplandecer'],shoot:['tirar'],sink:['sumergir','sumergirse'],smell:['oler','olfatear'],stick:['adherir'],sting:['aguijonear'],take:['agarrar'],tear:['romper'],throw:['arrojar'],wake:['despertar','despertarse']};
 const normalise=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/\s+/g,' ');
-export function matchesTranslation(answer,expected){const variants=String(expected).split('/').map(normalise),raw=normalise(answer);if(!raw)return false;if(variants.includes(raw))return true;const answers=raw.split(/\s*[/,;|]\s*/);return answers.every(a=>a&&variants.includes(a));}
+const split=s=>String(s).split('/').map(normalise);
+export function acceptedMeanings(v){return [...new Set([...spanishMeaning(v).split('/').map(s=>s.trim()),...(EXTRA[v.forms[0]]||[])])];}
+const REVERSE={beat:'vencer',hit:'golpear',do:'hacer',make:'fabricar',know:'saber',meet:'reunirse',lay:'colocar',put:'poner',set:'establecer',let:'permitir',leave:'marcharse',quit:'abandonar',say:'decir',tell:'contar',show:'mostrar',teach:'enseñar',grow:'crecer',ride:'montar',wear:'llevar puesto',spend:'gastar / pasar tiempo',bring:'traer',take:'tomar / coger / llevar'};
+export function translationQuestion(v,direction='es-en'){
+ direction=direction==='en-es'?'en-es':'es-en';
+ const prompt=direction==='es-en'?(REVERSE[v.forms[0]]||spanishMeaning(v)):v.forms[0];
+ // A genuinely ambiguous single Spanish meaning admits other listed infinitives.
+ const expected=direction==='en-es'?acceptedMeanings(v).join(' / '):[...new Set([v.forms[0],...DEMO_VERBS.filter(other=>!prompt.includes('/')&&acceptedMeanings(other).some(m=>normalise(m)===normalise(prompt))).map(other=>other.forms[0])])].join(' / ');
+ return {v,mode:'translator',col:3,direction,prompt,expected};
+}
+export function matchesTranslation(answer,expected){const variants=split(expected),raw=normalise(answer);if(!raw)return false;if(variants.includes(raw))return true;const answers=raw.split(/\s*[/,;|]\s*/);return answers.every(a=>a&&variants.includes(a));}
+export function matchesTranslationQuestion(answer,q){return matchesTranslation(q.direction==='es-en'?String(answer).replace(/^\s*to\s+/i,''):answer,q.expected);}
