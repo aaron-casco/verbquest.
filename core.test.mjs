@@ -48,8 +48,10 @@ test('Cut distractors model false regular forms without unrelated cat',()=>{cons
 
 import {examReward,examReviewQuestions} from './gameplay.js';
 test('Simulacro: premios por fallos y repaso de cada palabra fallada',()=>{
- for(const [errors,coins] of [[0,90],[1,85],[2,80],[3,75],[4,0],[20,0]])assert.equal(examReward(errors),coins);
+ for(const [errors,coins] of [[0,100],[1,95],[2,90],[3,85],[4,0],[20,0]])assert.equal(examReward(errors),coins);
  assert.equal(examReward(1,false),0);assert.equal(examReward(-1),0);
  const v=DEMO_VERBS[0],p={lastErrors:[{verb:v.id,col:1},{verb:v.id,col:2}]};
  const qs=examReviewQuestions(p,DEMO_VERBS);assert.equal(qs.length,2);assert.deepEqual(qs.map(q=>q.col),[1,2]);assert(qs.every(q=>q.mode==='single'&&q.given!==q.col));assert.equal(rewardFor('review',2,'exam'),4);
 });
+
+test('Exam rewards cover every mode, all-verbs multiplier and failed attempts',()=>{for(const [mode,rewards] of [['classic',[100,95,90,85]],['random',[155,150,145,140]],['perfect',[190,0,0,0]]])for(const [errors,coins] of rewards.entries()){assert.equal(examReward(errors,true,mode,0),coins);assert.equal(examReward(errors,true,mode,'all'),coins*10);assert.equal(examReward(errors,false,mode,'all'),0);}assert.equal(examReward(4,true,'random','all'),0);assert.equal(examReward(0,true,'unknown','all'),0);});

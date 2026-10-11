@@ -20,5 +20,12 @@ export function latestErrors(profile,verbs){return (profile.lastErrors||[]).filt
 export const COIN_RATES=Object.freeze({recall:[5,2],portals:[3,2],chain:[2,1],detective:[3,2],roulette:[5,3]});
 export function rewardFor(type,correct,game='recall'){const rates=COIN_RATES[game]||COIN_RATES.recall;return type==='review'?correct*rates[1]:type==='practice'?correct*rates[0]:0;}
 
-export function examReward(errors,passed=true){return passed&&Number.isInteger(errors)&&errors>=0&&errors<=3?90-5*errors:0;}
+export function examReward(errors,passed=true,mode='classic',block=0){
+ if(!passed||!Number.isInteger(errors)||errors<0||errors>3)return 0;
+ const multiplier=block==='all'?10:1;
+ if(mode==='perfect')return errors===0?190*multiplier:0;
+ if(mode==='classic')return (100-5*errors)*multiplier;
+ if(mode==='random')return (155-5*errors)*multiplier;
+ return 0;
+}
 export function examReviewQuestions(profile,verbs){return latestErrors(profile,verbs).map(c=>({v:verbs.find(v=>v.id===c.verb),mode:'single',col:c.col,given:(c.col+1)%3}));}
