@@ -374,17 +374,18 @@ if(modelContext?.registerTool){
 
 
 document.addEventListener('pointerdown',e=>{if(e.isTrusted)unlockAudio();},{passive:true});
-// Writing exercises: Enter moves through editable fields; the final field never submits a multi-field exercise.
+// Enter submits only when all editable fields are filled; otherwise it navigates through fields.
 document.addEventListener('keydown',e=>{
  if(e.key!=='Enter'||e.isComposing||e.ctrlKey||e.metaKey||e.altKey)return;
  const field=e.target;if(!(field instanceof HTMLInputElement))return;
  const form=field.closest('#quiz-form,#exam-form,#roulette-form');if(!form)return;
  const fields=[...form.querySelectorAll('input')].filter(input=>!input.disabled&&!input.readOnly&&['text','search'].includes(input.type)&&input.getClientRects().length>0);
- if(form.id==='quiz-form'&&fields.length===1&&quiz?.type!=='arena')return;
  const index=fields.indexOf(field);if(index<0)return;
  e.preventDefault();
- if(index<fields.length-1){fields[index+1].focus();fields[index+1].scrollIntoView({block:'nearest'});}
- else toast(currentLanguage()==='en'?'All fields reached. Click the check button when you are ready.':'Has llegado a la última casilla. Pulsa el botón de corregir cuando estés listo.');
+ if(e.repeat)return;
+ if(fields.every(input=>input.value.trim().length>0)){form.requestSubmit();return;}
+ const next=index<fields.length-1?fields[index+1]:fields.find(input=>!input.value.trim());
+ next?.focus();next?.scrollIntoView({block:'nearest'});
 });
 document.addEventListener('keydown',e=>{if(e.isTrusted&&['Enter',' '].includes(e.key))unlockAudio();});
 document.addEventListener('click',e=>{if(e.isTrusted&&e.target.closest('button,a,input[type=checkbox]'))playClick();});
