@@ -6,3 +6,6 @@ export function examDateLabel(exam,language='es'){return new Intl.DateTimeFormat
 export function examCountdown(exam,today,language='es'){const days=Math.round((Date.parse(exam.date+'T12:00:00Z')-Date.parse(today+'T12:00:00Z'))/86400000);return language==='en'?(days===0?'Today':days===1?'Tomorrow':days===7?'In one week':days>0?`In ${days} days`:'Scheduled exam'):(days===0?'Hoy':days===1?'Mañana':days===7?'Dentro de una semana':days>0?`Dentro de ${days} días`:'Examen seleccionado');}
 
 export function competitiveAllowed(profile){return profile?.competitiveEnabled!==false;}
+
+export const EXTRA_ATTEMPT_PRICE=150;
+export function arenaAttemptLimit(tickets,season,day){return 3+new Set((tickets||[]).filter(t=>t.season_id===season&&t.day===day).map(t=>t.purchase_id)).size;}

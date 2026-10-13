@@ -6,6 +6,10 @@ function cookie(value,age=3600){return `${cookieName}=${value}; Path=/; HttpOnly
 function sessionCookie(req){try{return JSON.parse(Buffer.from((req.headers.cookie||'').split('; ').find(x=>x.startsWith(cookieName+'='))?.slice(cookieName.length+1)||'','base64url').toString());}catch{return {};}}
 export function sameOrigin(req){try{return new URL(req.headers.origin).host===req.headers.host;}catch{return false;}}
 export function publicFailure(e,mode){
+ if(/insufficient_coins/.test(e.message))return {status:409,error:'Necesitas 150 monedas.'};
+ if(/attempt_not_exhausted/.test(e.message))return {status:409,error:'Ya tienes un intento disponible. Úsalo antes de comprar otro.'};
+ if(/arena_daily_limit/.test(e.message))return {status:409,error:'Has agotado tus intentos. Puedes comprar otro por 150 monedas.'};
+ if(/season_closed/.test(e.message))return {status:409,error:'La temporada ya ha terminado.'};
  if(/last_creature_required/.test(e.message))return {status:409,error:'No se puede eliminar la última criatura de este perfil.'};
  if(/legendary_not_ready/.test(e.message))return {status:409,error:'Tu legendaria todavía está despertando. Deben pasar 24 horas desde su adquisición.'};
  if(/competitive_access_denied/.test(e.message))return {status:403,error:'Tu acceso al competitivo está desactivado. Recarga para continuar con prácticas y simulacros.'};
@@ -52,13 +56,18 @@ export default async function handler(req,res){
    const config=await call('/rest/v1/vq_config?id=eq.1&select=state,revision',{token:session.access});
    const profiles=admin?await call('/rest/v1/vq_profiles?select=user_id,state,revision',{token:session.access}):await call('/rest/v1/rpc/vq_public_profiles',{method:'POST',data:{},token:session.access});
    let seasonRewards=[];try{seasonRewards=await call('/rest/v1/vq_season_rewards?select=season_id,amount,position,claimed_at',{token:session.access});}catch(e){if(e.status!==404)throw e;}
-   return res.status(200).json({serverNow:Date.now(),seasonRewards,own:own[0]||null,config:config[0],profiles,administrator:admin,user:{id:user.id,email:user.email,name:String(user.user_metadata?.name||'').slice(0,32)}});
+   let arenaTickets=[];try{arenaTickets=await call('/rest/v1/vq_arena_tickets?select=purchase_id,season_id,day',{token:session.access});}catch(e){if(e.status!==404)throw e;}
+   return res.status(200).json({serverNow:Date.now(),arenaTickets,seasonRewards,own:own[0]||null,config:config[0],profiles,administrator:admin,user:{id:user.id,email:user.email,name:String(user.user_metadata?.name||'').slice(0,32)}});
   }
   if(mode==='save'&&req.method==='POST'){
    const id=String(body.profile?.id||'');if(id!==user.id&&!admin)return res.status(403).json({error:'No tienes permisos sobre ese perfil.'});
    if(!/^[0-9a-f-]{36}$/i.test(id))return res.status(400).json({error:'Perfil incorrecto.'});
    const output=await call('/rest/v1/rpc/vq_save_profile',{method:'POST',token:session.access,data:{target_id:id,next_state:body.profile,expected_revision:Number(body.revision)||0}});
    return res.status(200).json({revision:output});
+  }
+  if(mode==='arena-ticket'&&req.method==='POST'){
+   const id=String(body.id||'');if(!/^[0-9a-f-]{36}$/i.test(id))return res.status(400).json({error:'Compra incorrecta.'});
+   return res.status(200).json(await call('/rest/v1/rpc/vq_buy_arena_ticket',{method:'POST',token:session.access,data:{purchase_id:id}}));
   }
   if(['admin-pet-change','admin-notice'].includes(mode)&&req.method==='POST'){
    if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
