@@ -4,12 +4,7 @@ import {matches,grade,parseList,recordReview,seeded,shuffle} from './core.js';
 test('Acepta variantes individuales, mayúsculas y espacios; rechaza variantes ajenas y blancos',()=>{
   assert(matches(' WERE ','was/were'));assert(matches('was / were','was/were'));assert(!matches('was/wrong','was/were'));assert(!matches('','been'));assert(!matches('went','gone'));
 });
-test('Tres fallos aprueban, cuatro suspenden; cuenta cada palabra y no las casillas dadas',()=>{
-  const rows=[{verb:{id:'a',forms:['a','b','c']},given:0},{verb:{id:'d',forms:['d','e','f']},given:0}];
-  const three=grade(rows,{'a:1':'b'},3);assert.equal(three.errors,3);assert.equal(three.passed,true);
-  const four=grade(rows,{},3);assert.equal(four.errors,4);assert.equal(four.passed,false);assert.equal(four.total,4);
-  assert.equal(grade(rows,{'a:1':'b','a:2':'c','d:1':'e','d:2':'f'},0).passed,true);
-});
+test('Exam errors count rows, retain all incorrect cells, three pass and four fail',()=>{const rows=Array.from({length:4},(_,i)=>({verb:{id:String(i),forms:['cut','cut','cut']},given:1}));const answers={'0:0':'cat','0:2':'cutt','1:0':'cut','1:2':'cut','2:0':'cut','2:2':'cut','3:0':'cut','3:2':'cut'};const one=grade(rows,answers);assert.equal(one.errors,1);assert.equal(one.cellErrors,2);assert.equal(one.total,4);assert.equal(one.correct,3);assert(one.passed);assert(!grade(rows,{}).passed);assert.equal(grade(rows,{}).errors,4);assert(grade(rows,{'0:0':'cut','0:2':'cut'}).passed);});
 test('Repaso: un error reinicia la racha y adelanta la revisión',()=>{
   const p={reviews:{}};recordReview(p,'x',1,true,0);assert.equal(p.reviews['x:1'].due,86400000);recordReview(p,'x',1,true,0);assert.equal(p.reviews['x:1'].due,3*86400000);recordReview(p,'x',1,false,0);assert.equal(p.reviews['x:1'].streak,0);assert.equal(p.reviews['x:1'].due,600000);
 });
@@ -55,3 +50,7 @@ test('Simulacro: premios por fallos y repaso de cada palabra fallada',()=>{
 });
 
 test('Exam rewards cover every mode, all-verbs multiplier and failed attempts',()=>{for(const [mode,rewards] of [['classic',[100,95,90,85]],['random',[155,150,145,140]],['perfect',[190,0,0,0]]])for(const [errors,coins] of rewards.entries()){assert.equal(examReward(errors,true,mode,0),coins);assert.equal(examReward(errors,true,mode,'all'),coins*10);assert.equal(examReward(errors,false,mode,'all'),0);}assert.equal(examReward(4,true,'random','all'),0);assert.equal(examReward(0,true,'unknown','all'),0);});
+
+import {completeVariants,questionVariantBonus} from './core.js';
+test('Double variant bonus needs every valid alternative, never repeated words or extra invalid forms',()=>{for(const value of ['lit/lighted','LIGHTED lit','lit, lighted','lit and lighted'])assert(completeVariants(value,'lit/lighted'));for(const value of ['lit','lit lit','lit/wrong',''])assert(!completeVariants(value,'lit/lighted'));assert(questionVariantBonus([{answer:'lit/lighted',expected:'lit/lighted',correct:true}]));assert(!questionVariantBonus([{answer:'lit/lighted',expected:'lit/lighted',correct:true},{answer:'lit',expected:'lit/lighted',correct:true}]));assert(!completeVariants('cut cut','cut'));});
+test('Hang accepts both conjugations in context-free forms',()=>{const hang=DEMO_VERBS.find(v=>v.id==='hang');for(const c of [1,2]){assert(matches('hanged',hang.forms[c]));assert(matches('hung',hang.forms[c]));assert(completeVariants('hung hanged',hang.forms[c]));}});

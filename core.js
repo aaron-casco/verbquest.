@@ -15,8 +15,9 @@ export function seeded(seed) {let n=2166136261;for(const c of seed)n=Math.imul(n
 export function grade(rows,answers,maxErrors=3) {
   const cells=rows.flatMap(r=>r.verb.forms.map((expected,i)=>({verb:r.verb.id,col:i,expected,answer:answers[`${r.verb.id}:${i}`]??'',given:i===r.given}))).filter(c=>!c.given);
   cells.forEach(c=>c.correct=matches(c.answer,c.expected));
-  const errors=cells.filter(c=>!c.correct).length;
-  return {cells,errors,correct:cells.length-errors,total:cells.length,passed:errors<=maxErrors};
+  const cellErrors=cells.filter(c=>!c.correct).length;
+  const errors=new Set(cells.filter(c=>!c.correct).map(c=>c.verb)).size;
+  return {cells,errors,cellErrors,cellCorrect:cells.length-cellErrors,correct:rows.length-errors,total:rows.length,passed:errors<=maxErrors};
 }
 export const level = xp => 1+Math.floor(Math.max(0,xp)/100);
 export function recordReview(profile,verb,col,correct,now=Date.now()) {
@@ -38,3 +39,6 @@ export function parseList(text) {
   if([0,1,2,3].some(b=>!verbs.some(v=>v.block===b)))throw Error('Incluye verbos para los cuatro bloques.');
   return verbs;
 }
+
+export function completeVariants(answer,expected){const e=[...new Set(alternatives(expected))];if(e.length<2||!matches(answer,expected))return false;const raw=normalize(answer);let parts=raw.split(/\s*(?:[/,;|]|\b(?:or|and|o|y)\b)\s*/).filter(Boolean);if(parts.length===1&&e.every(x=>!x.includes(' ')))parts=raw.split(/\s+/);return e.every(x=>parts.includes(x));}
+export function questionVariantBonus(checks){const eligible=checks.filter(c=>alternatives(c.expected||'').length>1);return checks.length>0&&checks.every(c=>c.correct)&&eligible.length>0&&eligible.every(c=>completeVariants(c.answer,c.expected));}

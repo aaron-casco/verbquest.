@@ -512,8 +512,8 @@ export const DEMO_VERBS = [
     "id": "hang",
     "forms": [
       "hang",
-      "hung",
-      "hung"
+      "hung/hanged",
+      "hung/hanged"
     ],
     "block": 1,
     "note": "",

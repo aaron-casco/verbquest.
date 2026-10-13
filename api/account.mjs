@@ -6,6 +6,7 @@ function cookie(value,age=3600){return `${cookieName}=${value}; Path=/; HttpOnly
 function sessionCookie(req){try{return JSON.parse(Buffer.from((req.headers.cookie||'').split('; ').find(x=>x.startsWith(cookieName+'='))?.slice(cookieName.length+1)||'','base64url').toString());}catch{return {};}}
 export function sameOrigin(req){try{return new URL(req.headers.origin).host===req.headers.host;}catch{return false;}}
 export function publicFailure(e,mode){
+ if(/last_creature_required/.test(e.message))return {status:409,error:'No se puede eliminar la última criatura de este perfil.'};
  if(/legendary_not_ready/.test(e.message))return {status:409,error:'Tu legendaria todavía está despertando. Deben pasar 24 horas desde su adquisición.'};
  if(/competitive_access_denied/.test(e.message))return {status:403,error:'Tu acceso al competitivo está desactivado. Recarga para continuar con prácticas y simulacros.'};
  if(e.code==='email_not_confirmed')return {status:403,error:'Confirma tu correo antes de iniciar sesión. Revisa el mensaje de Supabase.'};
@@ -58,6 +59,13 @@ export default async function handler(req,res){
    if(!/^[0-9a-f-]{36}$/i.test(id))return res.status(400).json({error:'Perfil incorrecto.'});
    const output=await call('/rest/v1/rpc/vq_save_profile',{method:'POST',token:session.access,data:{target_id:id,next_state:body.profile,expected_revision:Number(body.revision)||0}});
    return res.status(200).json({revision:output});
+  }
+  if(['admin-pet-change','admin-notice'].includes(mode)&&req.method==='POST'){
+   if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
+   const id=String(body.id||'');if(!/^[0-9a-f-]{36}$/i.test(id))return res.status(400).json({error:'Perfil incorrecto.'});
+   if(mode==='admin-notice'){const title=String(body.title||'').trim(),message=String(body.message||'').trim();if(!title||!message||title.length>80||message.length>800)return res.status(400).json({error:'Revisa el aviso.'});return res.status(200).json(await call('/rest/v1/rpc/vq_admin_notice',{method:'POST',token:session.access,data:{target_id:id,notice_title:title,notice_message:message}}));}
+   const instance=String(body.instanceId||''),operation=String(body.operation||''),reason=String(body.reason||'').trim();if(!/^[\w-]{1,100}$/.test(instance)||!['delete','downgrade'].includes(operation)||!reason||reason.length>300)return res.status(400).json({error:'Revisa la copia y el motivo.'});
+   return res.status(200).json(await call('/rest/v1/rpc/vq_admin_pet_change',{method:'POST',token:session.access,data:{target_id:id,instance_id:instance,operation,reason}}));
   }
   if(mode==='admin-evolve'&&req.method==='POST'){
    if(!admin)return res.status(403).json({error:'Necesitas permisos de moderador.'});
